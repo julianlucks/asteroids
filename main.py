@@ -21,6 +21,7 @@ def main():
     dt = 0
 
     running = True
+    # Game Loop
     while running:
         # Event handling
         for event in pygame.event.get():
@@ -31,6 +32,8 @@ def main():
         screen.fill(color)
         # draw player
         player.draw(screen)
+        # move according to keystrokes
+        player.update(dt)
         # Update the display
         pygame.display.flip()
         # Cap the frame rate at 60 FPS and get delta time
