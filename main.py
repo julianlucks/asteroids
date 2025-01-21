@@ -1,5 +1,6 @@
 import pygame
 from constants import *
+from player import Player
 
 def main():
     pygame.init()
@@ -11,6 +12,11 @@ def main():
 
     # Create a Clock instance
     clock = pygame.time.Clock()
+    # Create player instance
+    player_position_x = SCREEN_WIDTH / 2
+    player_position_y = SCREEN_HEIGHT / 2
+    player = Player(player_position_x, player_position_y)
+
     # Initialize delta time variable
     dt = 0
 
@@ -23,12 +29,13 @@ def main():
         # Fill the screen with black
         color = (0,0,0)
         screen.fill(color)
+        # draw player
+        player.draw(screen)
         # Update the display
         pygame.display.flip()
         # Cap the frame rate at 60 FPS and get delta time
         framerate = 60
         dt = clock.tick(framerate) / 1000 # Convert milliseconds to seconds
-        print(f"Delta time: {dt:.4f} seconds")
 
 if __name__ == "__main__":
     main()
