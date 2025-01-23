@@ -10,17 +10,20 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
-    # Create a Clock instance
-    clock = pygame.time.Clock()
+    # Create groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
 
-    # Create player instance
+    # Assign groups to the Player class
+    Player.containers = (updatable, drawable)
+
+    # Create player instance (automatically added to groups)
     player_position_x = SCREEN_WIDTH / 2
     player_position_y = SCREEN_HEIGHT / 2
     player = Player(player_position_x, player_position_y)
 
-    # Create groups
-    updatable = [player]  # Group containing objects to update
-    drawable = [player]   # Group containing objects to draw
+    # Create a Clock instance
+    clock = pygame.time.Clock()
 
     # Initialize delta time variable
     dt = 0
