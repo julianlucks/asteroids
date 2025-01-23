@@ -12,10 +12,15 @@ def main():
 
     # Create a Clock instance
     clock = pygame.time.Clock()
+
     # Create player instance
     player_position_x = SCREEN_WIDTH / 2
     player_position_y = SCREEN_HEIGHT / 2
     player = Player(player_position_x, player_position_y)
+
+    # Create groups
+    updatable = [player]  # Group containing objects to update
+    drawable = [player]   # Group containing objects to draw
 
     # Initialize delta time variable
     dt = 0
@@ -27,18 +32,25 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+
         # Fill the screen with black
-        color = (0,0,0)
+        color = (0, 0, 0)
         screen.fill(color)
-        # draw player
-        player.draw(screen)
-        # move according to keystrokes
-        player.update(dt)
+
+        # Update all objects in the updatable group
+        for obj in updatable:
+            obj.update(dt)
+
+        # Draw all objects in the drawable group
+        for obj in drawable:
+            obj.draw(screen)
+
         # Update the display
         pygame.display.flip()
+
         # Cap the frame rate at 60 FPS and get delta time
         framerate = 60
-        dt = clock.tick(framerate) / 1000 # Convert milliseconds to seconds
+        dt = clock.tick(framerate) / 1000  # Convert milliseconds to seconds
 
 if __name__ == "__main__":
     main()
