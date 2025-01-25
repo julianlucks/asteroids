@@ -1,4 +1,5 @@
 import pygame
+import sys
 from constants import *
 from player import Player
 from asteroid import Asteroid
@@ -50,6 +51,12 @@ def main():
         # Update all objects in the updatable group
         for obj in updatable:
             obj.update(dt)
+        
+        # Check collisions between the player and asteroids
+        for asteroid in asteroids:
+            if player.check_collision(asteroid):
+                print("Game over!")
+                sys.exit()  # Exit the program
 
         # Draw all objects in the drawable group
         for obj in drawable:
