@@ -218,7 +218,6 @@ class Player(CircleShape):
     def super_attack(self):
         # Only allow super attack if cooldown is done
         if self.super_timer <= 0:
-            print(f"Super attack triggered! Cooldown: {self.super_timer}")  # Debug print
             # Reset the super attack timer
             self.super_timer = SUPER_ATTACK_COOLDOWN
             
