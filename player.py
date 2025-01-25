@@ -67,6 +67,7 @@ class Player(CircleShape):
                 # Apply knockback and spin while stunned
                 self.position += self.knockback_velocity * dt
                 self.rotation += PLAYER_STUN_SPIN_SPEED * dt
+                self.wrap_position()  # Wrap position after movement
                 return  # Skip normal controls while stunned
 
         keys = pygame.key.get_pressed()
@@ -90,6 +91,7 @@ class Player(CircleShape):
     def move(self, dt, direction=1):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt * direction
+        self.wrap_position()  # Wrap position after movement
     
     def shoot(self):
         # Reset the shoot timer to the cooldown duration
@@ -120,3 +122,14 @@ class Player(CircleShape):
             
         # Set knockback velocity
         self.knockback_velocity = knockback_direction * PLAYER_KNOCKBACK_SPEED
+
+    def wrap_position(self):
+        # Wrap position around the screen edges
+        if self.position.x < 0:
+            self.position.x = SCREEN_WIDTH
+        elif self.position.x > SCREEN_WIDTH:
+            self.position.x = 0
+        if self.position.y < 0:
+            self.position.y = SCREEN_HEIGHT
+        elif self.position.y > SCREEN_HEIGHT:
+            self.position.y = 0

@@ -12,6 +12,7 @@ class Shot(CircleShape):
     def update(self, dt):
         # Move the shot according to its velocity
         self.position += self.velocity * dt
+        self.wrap_position()  # Wrap position after movement
 
         # Remove the shot if it goes off-screen
         screen_width, screen_height = pygame.display.get_surface().get_size()
