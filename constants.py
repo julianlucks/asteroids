@@ -1,3 +1,5 @@
+import pygame
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
@@ -12,3 +14,17 @@ PLAYER_SPEED = 200
 PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3
 SHOT_RADIUS = 5
+
+# Player 1 controls (WASD + SPACE)
+PLAYER1_LEFT = pygame.K_a
+PLAYER1_RIGHT = pygame.K_d
+PLAYER1_FORWARD = pygame.K_w
+PLAYER1_BACKWARD = pygame.K_s
+PLAYER1_SHOOT = pygame.K_SPACE
+
+# Player 2 controls (Arrow keys + Numpad 0)
+PLAYER2_LEFT = pygame.K_LEFT
+PLAYER2_RIGHT = pygame.K_RIGHT
+PLAYER2_FORWARD = pygame.K_UP
+PLAYER2_BACKWARD = pygame.K_DOWN
+PLAYER2_SHOOT = pygame.K_KP_0

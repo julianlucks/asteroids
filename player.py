@@ -1,16 +1,28 @@
 from circleshape import CircleShape 
 from shot import Shot
-from constants import PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN
+from constants import *
 import pygame
 
 class Player(CircleShape):
     containers = None  # This will be assigned dynamically in main.py
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, controls=None):
         # Call the parent class's constructor
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0  # Timer to manage shooting cooldown
+        
+        # Set control scheme (default to player 1 controls)
+        if controls is None:
+            self.controls = {
+                'left': PLAYER1_LEFT,
+                'right': PLAYER1_RIGHT,
+                'forward': PLAYER1_FORWARD,
+                'backward': PLAYER1_BACKWARD,
+                'shoot': PLAYER1_SHOOT
+            }
+        else:
+            self.controls = controls
 
         # Add this instance to the assigned groups
         if Player.containers:
@@ -46,21 +58,21 @@ class Player(CircleShape):
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
 
-        if keys[pygame.K_a]:  # turn left
+        if keys[self.controls['left']]:  # turn left
             self.rotate(dt, -1)  # Pass -1 for left
-        if keys[pygame.K_d]:
+        if keys[self.controls['right']]:
             self.rotate(dt, 1)  # Pass 1 for right
-        if keys[pygame.K_w]:
+        if keys[self.controls['forward']]:
             self.move(dt)
-        if keys[pygame.K_s]:
-            self.move(dt)
-        # Shoot if spacebar is pressed and cooldown has expired
-        if keys[pygame.K_SPACE] and self.shoot_timer <= 0:
+        if keys[self.controls['backward']]:
+            self.move(dt, -1)  # Move backward
+        # Shoot if shoot key is pressed and cooldown has expired
+        if keys[self.controls['shoot']] and self.shoot_timer <= 0:
             self.shoot()
 
-    def move(self, dt):
+    def move(self, dt, direction=1):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * PLAYER_SPEED * dt
+        self.position += forward * PLAYER_SPEED * dt * direction
     
     def shoot(self):
         # Reset the shoot timer to the cooldown duration

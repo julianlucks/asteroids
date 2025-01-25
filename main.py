@@ -26,10 +26,21 @@ def main():
     AsteroidField.containers = (updatable)
     Shot.containers = (shots, updatable, drawable)
 
-    # Create player instance (automatically added to groups)
-    player_position_x = SCREEN_WIDTH / 2
-    player_position_y = SCREEN_HEIGHT / 2
-    player = Player(player_position_x, player_position_y)
+    # Create player instances (automatically added to groups)
+    player1_x = SCREEN_WIDTH / 3
+    player1_y = SCREEN_HEIGHT / 2
+    player1 = Player(player1_x, player1_y)  # Player 1 with default controls (WASD + SPACE)
+
+    player2_x = (SCREEN_WIDTH / 3) * 2
+    player2_y = SCREEN_HEIGHT / 2
+    player2_controls = {
+        'left': PLAYER2_LEFT,
+        'right': PLAYER2_RIGHT,
+        'forward': PLAYER2_FORWARD,
+        'backward': PLAYER2_BACKWARD,
+        'shoot': PLAYER2_SHOOT
+    }
+    player2 = Player(player2_x, player2_y, player2_controls)  # Player 2 with arrow keys + numpad 0
     # Create an asteroid field instance
     asteroid_field = AsteroidField()
 
@@ -55,9 +66,9 @@ def main():
         for obj in updatable:
             obj.update(dt)
         
-        # Check collisions between the player and asteroids
+        # Check collisions between players and asteroids
         for asteroid in asteroids:
-            if player.check_collision(asteroid):
+            if player1.check_collision(asteroid) or player2.check_collision(asteroid):
                 print("Game over!")
                 sys.exit()  # Exit the program
         
