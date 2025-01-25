@@ -18,6 +18,17 @@ PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3
 SHOT_RADIUS = 5
 
+# Asteroid appearance
+ASTEROID_BASE_COLOR = (70, 70, 70)    # Dark gray base
+ASTEROID_CRATER_COLOR = (40, 40, 40)  # Darker gray for craters
+ASTEROID_HIGHLIGHT_COLOR = (100, 100, 100)  # Lighter gray for highlights
+ASTEROID_CRATER_COUNT = 6  # Number of craters per asteroid
+ASTEROID_NOISE_SCALE = 0.15  # Scale of the surface noise (relative to radius)
+ASTEROID_MIN_POINTS = 8  # Minimum number of points for lumpy shape
+ASTEROID_MAX_POINTS = 12  # Maximum number of points for lumpy shape
+ASTEROID_MIN_VARIATION = 0.7  # Minimum radius multiplier for lumpiness
+ASTEROID_MAX_VARIATION = 1.3  # Maximum radius multiplier for lumpiness
+
 # Explosion effects
 EXPLOSION_PARTICLE_COUNT = 12
 EXPLOSION_PARTICLE_SPEED = 200
