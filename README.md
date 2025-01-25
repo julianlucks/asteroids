@@ -33,7 +33,6 @@ Welcome to my retro-style 2-player Asteroids game!
 - When hit by an asteroid, your ship will be briefly stunned
 - Large asteroids split into smaller ones when shot
 - Watch out for asteroid debris!
-
-## Scoring
+- Use your ships momentum and backward throttle to shoot more asteroids
 - Compete with your friend for the highest score
 - There are no lives - just keep going!
