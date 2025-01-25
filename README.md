@@ -25,7 +25,7 @@ Welcome to my retro-style 2-player Asteroids game!
 - `↓` - Move backward
 - `←` - Rotate left
 - `→` - Rotate right
-- `Return` - Shoot
+- `0` (NumPad) - Shoot
 
 ## Game Tips
 - When hit by an asteroid, your ship will be briefly stunned
