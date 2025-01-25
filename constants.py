@@ -11,12 +11,19 @@ ASTEROID_KINDS = 3
 ASTEROID_SPAWN_RATE = 2.0  # seconds
 ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 
-PLAYER_RADIUS = 20
-PLAYER_TURN_SPEED = 300
+# Player movement
+PLAYER_TURN_SPEED = 360  # Degrees per second
 PLAYER_SPEED = 200
-PLAYER_SHOOT_SPEED = 500
-PLAYER_SHOOT_COOLDOWN = 0.3
-SHOT_RADIUS = 5
+PLAYER_SHOOT_SPEED = 400
+PLAYER_SHOOT_COOLDOWN = 0.25
+PLAYER_RADIUS = 15
+SHOT_RADIUS = 3  # Size of the projectiles
+
+# Physics constants
+THRUST_FORCE = 250      # Reduced acceleration for more subtle movement
+MAX_SPEED = 250         # Lower max speed
+DRAG_FACTOR = 0.3       # Slightly more drag for better control
+BACKWARD_MULTIPLIER = 0.4  # Even weaker backward thrust
 
 # Asteroid appearance
 ASTEROID_BASE_COLOR = (70, 70, 70)    # Dark gray base
@@ -54,10 +61,10 @@ SCORE_FONT_SIZE = 32
 SCORE_PADDING = 20  # Padding from screen edges
 SCORE_POINTS = 100  # Points per asteroid hit
 
-# Stun mechanics
-PLAYER_STUN_DURATION = 0.7  # seconds
-PLAYER_KNOCKBACK_SPEED = 400  # pixels per second
-PLAYER_STUN_SPIN_SPEED = 720  # degrees per second
+# Stun settings
+PLAYER_STUN_DURATION = 1.0
+PLAYER_STUN_SPIN_SPEED = 360  # Degrees per second
+PLAYER_KNOCKBACK_SPEED = MAX_SPEED * 1.2  # Slightly faster than max speed
 
 # Player 1 controls (WASD + SPACE)
 PLAYER1_LEFT = pygame.K_a

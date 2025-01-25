@@ -5,7 +5,7 @@ from exhaust import ExhaustSystem
 import pygame
 
 class Player(CircleShape):
-    containers = None  # This will be assigned dynamically in main.py
+    containers = None
 
     def __init__(self, x, y, controls=None, color="white"):
         # Call the parent class's constructor
@@ -14,6 +14,9 @@ class Player(CircleShape):
         self.shoot_timer = 0  # Timer to manage shooting cooldown
         self.color = color  # Store player color
         self.score = 0  # Initialize score
+        
+        # Physics properties
+        self.velocity = pygame.Vector2(0, 0)  # Current velocity vector
         
         # Exhaust system
         self.exhaust = ExhaustSystem()
@@ -137,15 +140,16 @@ class Player(CircleShape):
             if self.stun_timer <= 0:
                 self.is_stunned = False
                 self.knockback_velocity = pygame.Vector2(0, 0)
+                self.velocity = pygame.Vector2(0, 0)  # Reset velocity after stun
             else:
-                # Apply knockback and spin while stunned
+                # Apply knockback during stun
                 self.position += self.knockback_velocity * dt
                 self.rotation += PLAYER_STUN_SPIN_SPEED * dt
-                self.wrap_position()  # Wrap position after movement
+                self.wrap_position()
                 # Update exhaust but mark as not moving while stunned
                 self.exhaust.update(dt, self.position.x, self.position.y, 
                                   self.rotation, False, 0)
-                return  # Skip normal controls while stunned
+                return
 
         # Reset movement flags
         self.is_moving = False
@@ -170,21 +174,43 @@ class Player(CircleShape):
             self.move_direction = -1
             self.move(dt, -1)
 
+        # Apply drag to slow down
+        if self.velocity.length() > 0:
+            drag = self.velocity * DRAG_FACTOR
+            self.velocity -= drag * dt
+
+        # Update position based on velocity
+        self.position += self.velocity * dt
+        self.wrap_position()
+
         # Handle shooting
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
         if keys[self.controls['shoot']] and self.shoot_timer <= 0:
             self.shoot()
             
-        # Update exhaust system
+        # Update exhaust system - use velocity for intensity
+        speed = self.velocity.length() / MAX_SPEED  # Normalize speed to 0-1
         self.exhaust.update(dt, self.position.x, self.position.y, self.rotation, 
-                          self.is_moving, abs(self.move_direction))
+                          self.is_moving, speed)
 
     def move(self, dt, direction=1):
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * PLAYER_SPEED * dt * direction
-        self.wrap_position()  # Wrap position after movement
-    
+        # Calculate thrust direction based on ship's rotation
+        thrust_dir = pygame.Vector2(0, 1).rotate(self.rotation)
+        
+        # Apply thrust force in the direction we're facing
+        thrust = thrust_dir * THRUST_FORCE * dt
+        if direction < 0:
+            thrust *= BACKWARD_MULTIPLIER  # Weaker thrust when moving backward
+        
+        # Add thrust to current velocity
+        self.velocity += thrust
+        
+        # Limit speed
+        speed = self.velocity.length()
+        if speed > MAX_SPEED:
+            self.velocity.scale_to_length(MAX_SPEED)
+
     def shoot(self):
         # Reset the shoot timer to the cooldown duration
         self.shoot_timer = PLAYER_SHOOT_COOLDOWN
@@ -205,13 +231,12 @@ class Player(CircleShape):
             self.is_stunned = True
             self.stun_timer = PLAYER_STUN_DURATION
             
-            # Calculate knockback direction (away from asteroid)
-            knockback_dir = self.position - asteroid_pos
-            knockback_dir = knockback_dir.normalize()
-            self.knockback_velocity = knockback_dir * PLAYER_KNOCKBACK_SPEED
-            
-            # Trigger quick fade for exhaust particles
-            self.exhaust.trigger_quick_fade()
+            # Calculate knockback direction from asteroid
+            knockback_dir = self.position - pygame.Vector2(asteroid_pos)
+            if knockback_dir.length() > 0:
+                knockback_dir.normalize_ip()
+                # Add current velocity to knockback
+                self.knockback_velocity = knockback_dir * MAX_SPEED + self.velocity * 0.5
 
     def wrap_position(self):
         # Wrap position around the screen edges
