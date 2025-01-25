@@ -191,17 +191,45 @@ class Player(CircleShape):
             
         # Update exhaust system - use velocity for intensity
         speed = self.velocity.length() / MAX_SPEED  # Normalize speed to 0-1
-        self.exhaust.update(dt, self.position.x, self.position.y, self.rotation, 
-                          self.is_moving, speed)
+        # Determine if we're braking
+        is_braking = keys[self.controls['backward']] and self.velocity.length() > 0
+        if is_braking:
+            # Show exhaust in opposite direction when braking
+            brake_rotation = (self.rotation + 180) % 360
+            self.exhaust.update(dt, self.position.x, self.position.y, brake_rotation,
+                              True, speed)
+        else:
+            # Normal exhaust
+            self.exhaust.update(dt, self.position.x, self.position.y, self.rotation,
+                              self.is_moving, speed)
 
     def move(self, dt, direction=1):
         # Calculate thrust direction based on ship's rotation
         thrust_dir = pygame.Vector2(0, 1).rotate(self.rotation)
         
-        # Apply thrust force in the direction we're facing
-        thrust = thrust_dir * THRUST_FORCE * dt
         if direction < 0:
-            thrust *= BACKWARD_MULTIPLIER  # Weaker thrust when moving backward
+            # For backward key, first act as brake
+            current_speed = self.velocity.length()
+            if current_speed > 10:  # Only brake if moving significantly
+                # Get current movement direction
+                move_dir = self.velocity.normalize()
+                # Calculate angle between movement and facing direction
+                angle = thrust_dir.angle_to(move_dir)
+                # If moving roughly forward, apply braking force
+                if abs(angle) < 90:
+                    # Apply brake force against current velocity
+                    brake_force = self.velocity.normalize() * THRUST_FORCE * 1.5 * dt
+                    self.velocity -= brake_force
+                    # Prevent jitter by setting very small velocities to zero
+                    if self.velocity.length() < 10:
+                        self.velocity = pygame.Vector2(0, 0)
+                    return
+            
+            # Apply backward thrust if nearly stopped or moving backward
+            thrust = -thrust_dir * THRUST_FORCE * dt * BACKWARD_MULTIPLIER
+        else:
+            # Normal forward thrust
+            thrust = thrust_dir * THRUST_FORCE * dt
         
         # Add thrust to current velocity
         self.velocity += thrust
