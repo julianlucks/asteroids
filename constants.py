@@ -29,6 +29,13 @@ ASTEROID_MAX_POINTS = 12  # Maximum number of points for lumpy shape
 ASTEROID_MIN_VARIATION = 0.7  # Minimum radius multiplier for lumpiness
 ASTEROID_MAX_VARIATION = 1.3  # Maximum radius multiplier for lumpiness
 
+# Asteroid lighting
+LIGHT_DIRECTION = pygame.Vector2(1, -1)  # Light coming from top-right
+LIGHT_INTENSITY = 0.7  # Base light intensity
+AMBIENT_LIGHT = 0.3   # Minimum light level
+CRATER_DEPTH = 0.4    # How "deep" craters appear
+BUMP_HEIGHT = 0.2     # How "high" surface bumps appear
+
 # Explosion effects
 EXPLOSION_PARTICLE_COUNT = 12
 EXPLOSION_PARTICLE_SPEED = 200
