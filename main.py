@@ -35,19 +35,28 @@ def main():
     Shot.containers = (shots, updatable, drawable)
     Explosion.containers = (updatable, drawable)
 
-    # Create player instances (automatically added to groups)
-    player1_x = SCREEN_WIDTH / 3
-    player1_y = SCREEN_HEIGHT / 2
-    player1 = Player(player1_x, player1_y, color=(144, 238, 144))  # Light green
+    # Create players with their initial positions and controls
+    player1_x = SCREEN_WIDTH // 4
+    player1_y = SCREEN_HEIGHT // 2
+    player1_controls = {
+        'left': PLAYER1_LEFT,
+        'right': PLAYER1_RIGHT,
+        'forward': PLAYER1_FORWARD,
+        'backward': PLAYER1_BACKWARD,
+        'shoot': PLAYER1_SHOOT,
+        'super': PLAYER1_SUPER
+    }
+    player1 = Player(player1_x, player1_y, player1_controls, color=(0, 255, 0))  # Green
 
-    player2_x = (SCREEN_WIDTH / 3) * 2
-    player2_y = SCREEN_HEIGHT / 2
+    player2_x = 3 * SCREEN_WIDTH // 4
+    player2_y = SCREEN_HEIGHT // 2
     player2_controls = {
         'left': PLAYER2_LEFT,
         'right': PLAYER2_RIGHT,
         'forward': PLAYER2_FORWARD,
         'backward': PLAYER2_BACKWARD,
-        'shoot': PLAYER2_SHOOT
+        'shoot': PLAYER2_SHOOT,
+        'super': PLAYER2_SUPER
     }
     player2 = Player(player2_x, player2_y, player2_controls, color=(207, 159, 255))  # Light blue
 

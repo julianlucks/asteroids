@@ -2,7 +2,9 @@ from circleshape import CircleShape
 from shot import Shot
 from constants import *
 from exhaust import ExhaustSystem
+from explosion import Explosion
 import pygame
+import math
 
 class Player(CircleShape):
     containers = None
@@ -11,7 +13,8 @@ class Player(CircleShape):
         # Call the parent class's constructor
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
-        self.shoot_timer = 0  # Timer to manage shooting cooldown
+        self.shoot_timer = 0  # Timer for normal shooting cooldown
+        self.super_timer = 0  # Start with super attack ready
         self.color = color  # Store player color
         self.score = 0  # Initialize score
         
@@ -30,7 +33,8 @@ class Player(CircleShape):
                 'right': PLAYER1_RIGHT,
                 'forward': PLAYER1_FORWARD,
                 'backward': PLAYER1_BACKWARD,
-                'shoot': PLAYER1_SHOOT
+                'shoot': PLAYER1_SHOOT,
+                'super': PLAYER1_SUPER
             }
         else:
             self.controls = controls
@@ -183,11 +187,19 @@ class Player(CircleShape):
         self.position += self.velocity * dt
         self.wrap_position()
 
-        # Handle shooting
+        # Update timers
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
+        if self.super_timer > 0:
+            self.super_timer -= dt
+
+        # Handle shooting
         if keys[self.controls['shoot']] and self.shoot_timer <= 0:
             self.shoot()
+            
+        # Handle super attack
+        if keys[self.controls['super']] and self.super_timer <= 0:
+            self.super_attack()
             
         # Update exhaust system - use velocity for intensity
         speed = self.velocity.length() / MAX_SPEED  # Normalize speed to 0-1
@@ -202,6 +214,33 @@ class Player(CircleShape):
             # Normal exhaust
             self.exhaust.update(dt, self.position.x, self.position.y, self.rotation,
                               self.is_moving, speed)
+
+    def super_attack(self):
+        # Only allow super attack if cooldown is done
+        if self.super_timer <= 0:
+            print(f"Super attack triggered! Cooldown: {self.super_timer}")  # Debug print
+            # Reset the super attack timer
+            self.super_timer = SUPER_ATTACK_COOLDOWN
+            
+            # Create a circular wave of bullets
+            for i in range(SUPER_ATTACK_BULLETS):
+                # Calculate angle for each bullet
+                angle = 360 / SUPER_ATTACK_BULLETS * i
+                # Create velocity vector for this angle
+                shot_velocity = pygame.Vector2(0, 1).rotate(angle) * SUPER_ATTACK_SPEED
+                
+                # Create the shot with a different color for super attacks
+                shot = Shot(self.position.x, self.position.y, shot_velocity, owner=self)
+                
+                # Add the shot to the appropriate groups
+                if Shot.containers:
+                    for group in Shot.containers:
+                        group.add(shot)
+            
+            # Create a visual effect for the super attack
+            flash = Explosion(self.position.x, self.position.y, self.color)
+        else:
+            print(f"Super attack on cooldown: {self.super_timer:.1f} seconds")  # Debug print
 
     def move(self, dt, direction=1):
         # Calculate thrust direction based on ship's rotation

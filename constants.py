@@ -72,10 +72,17 @@ PLAYER1_RIGHT = pygame.K_d
 PLAYER1_FORWARD = pygame.K_w
 PLAYER1_BACKWARD = pygame.K_s
 PLAYER1_SHOOT = pygame.K_SPACE
+PLAYER1_SUPER = pygame.K_LALT  # Left Alt for super attack
 
-# Player 2 controls (Arrow keys + Numpad 0)
+# Player 2 controls (Arrows + Numpad 0)
 PLAYER2_LEFT = pygame.K_LEFT
 PLAYER2_RIGHT = pygame.K_RIGHT
 PLAYER2_FORWARD = pygame.K_UP
 PLAYER2_BACKWARD = pygame.K_DOWN
-PLAYER2_SHOOT = pygame.K_KP_0
+PLAYER2_SHOOT = pygame.K_KP0  # Numpad 0
+PLAYER2_SUPER = pygame.K_KP1  # Numpad 1
+
+# Super attack settings
+SUPER_ATTACK_COOLDOWN = 10.0  # Cooldown in seconds
+SUPER_ATTACK_BULLETS = 64     # number of bullets
+SUPER_ATTACK_SPEED = 350      # Slightly increased speed
