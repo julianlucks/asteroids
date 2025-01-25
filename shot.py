@@ -5,9 +5,10 @@ import pygame
 class Shot(CircleShape):
     containers = None  # This will be assigned dynamically in main.py
     
-    def __init__(self, x, y, velocity):
+    def __init__(self, x, y, velocity, owner=None):
         super().__init__(x, y, SHOT_RADIUS)
         self.velocity = velocity
+        self.owner = owner  # Store reference to the player who fired this shot
 
     def update(self, dt):
         # Move the shot according to its velocity
@@ -20,5 +21,6 @@ class Shot(CircleShape):
             self.kill()  # Remove the shot from all sprite groups
 
     def draw(self, screen):
-        # Draw the shot as a circle
-        pygame.draw.circle(screen, (255, 255, 255), (int(self.position.x), int(self.position.y)), self.radius)
+        # Draw the shot in the owner's color if available, otherwise white
+        color = self.owner.color if self.owner else (255, 255, 255)
+        pygame.draw.circle(screen, color, (int(self.position.x), int(self.position.y)), self.radius)

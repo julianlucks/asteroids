@@ -12,6 +12,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.shoot_timer = 0  # Timer to manage shooting cooldown
         self.color = color  # Store player color
+        self.score = 0  # Initialize score
         
         # Set control scheme (default to player 1 controls)
         if controls is None:
@@ -101,7 +102,7 @@ class Player(CircleShape):
         shot_velocity = shot_velocity.rotate(self.rotation)  # Rotate to player's direction
         shot_velocity *= PLAYER_SHOOT_SPEED  # Scale to shoot speed
 
-        shot = Shot(self.position.x, self.position.y, shot_velocity)
+        shot = Shot(self.position.x, self.position.y, shot_velocity, owner=self)
 
         # Add the shot to the appropriate groups
         if Shot.containers:
@@ -133,3 +134,7 @@ class Player(CircleShape):
             self.position.y = SCREEN_HEIGHT
         elif self.position.y > SCREEN_HEIGHT:
             self.position.y = 0
+
+    def add_score(self, points):
+        """Add points to the player's score"""
+        self.score += points

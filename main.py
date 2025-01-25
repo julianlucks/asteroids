@@ -14,6 +14,9 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
+    # Set up font for score display
+    score_font = pygame.font.Font(None, SCORE_FONT_SIZE)
+
     # Create groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -80,12 +83,25 @@ def main():
         for asteroid in asteroids:
             for shot in shots:
                 if shot.check_collision(asteroid):  # If bullet hits asteroid
+                    # Award points to the shot's owner
+                    if shot.owner:
+                        shot.owner.add_score(SCORE_POINTS)
                     asteroid.split()  # Remove the asteroid
                     shot.kill()  # Remove the shot
 
         # Draw all objects in the drawable group
         for obj in drawable:
             obj.draw(screen)
+
+        # Draw scores
+        # Player 1 score (left side)
+        score_text1 = score_font.render(str(player1.score), True, player1.color)
+        screen.blit(score_text1, (SCORE_PADDING, SCORE_PADDING))
+
+        # Player 2 score (right side)
+        score_text2 = score_font.render(str(player2.score), True, player2.color)
+        score_rect2 = score_text2.get_rect()
+        screen.blit(score_text2, (SCREEN_WIDTH - score_rect2.width - SCORE_PADDING, SCORE_PADDING))
 
         # Update the display
         pygame.display.flip()

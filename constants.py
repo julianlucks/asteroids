@@ -15,6 +15,11 @@ PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3
 SHOT_RADIUS = 5
 
+# Score display
+SCORE_FONT_SIZE = 32
+SCORE_PADDING = 20  # Padding from screen edges
+SCORE_POINTS = 100  # Points per asteroid hit
+
 # Stun mechanics
 PLAYER_STUN_DURATION = 0.7  # seconds
 PLAYER_KNOCKBACK_SPEED = 400  # pixels per second
