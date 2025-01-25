@@ -1,5 +1,6 @@
 from circleshape import CircleShape 
 from constants import ASTEROID_MIN_RADIUS, SCREEN_WIDTH, SCREEN_HEIGHT
+from explosion import Explosion
 import pygame
 import random
 import math
@@ -53,7 +54,9 @@ class Asteroid(CircleShape):
             self.position.y = 0
 
     def split(self):
-        # Remove the current asteroid
+        # Create explosion effect
+        Explosion(self.position.x, self.position.y, color=(255, 200, 100))  # Orange-ish explosion
+        # Remove the asteroid
         self.kill()
         # If the asteroid is too small, it should not split further
         if self.radius <= ASTEROID_MIN_RADIUS:
