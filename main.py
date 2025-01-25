@@ -14,6 +14,10 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
+    # Load and scale background image
+    background_image = pygame.image.load(BACKGROUND_IMAGE_PATH)
+    background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
     # Set up font for score display
     score_font = pygame.font.Font(None, SCORE_FONT_SIZE)
 
@@ -62,9 +66,8 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
-        # Fill the screen with black
-        color = (0, 0, 0)
-        screen.fill(color)
+        # Draw background
+        screen.blit(background_image, (0, 0))
 
         # Update all objects in the updatable group
         for obj in updatable:
