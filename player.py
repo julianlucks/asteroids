@@ -42,34 +42,89 @@ class Player(CircleShape):
             for group in Player.containers:
                 group.add(self)
 
-    # function to define the player stripe shape
+    # function to define the player rocket shape
     def triangle(self):
+        # Calculate base vectors
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
-        return [a, b, c]
+        right = pygame.Vector2(0, 1).rotate(self.rotation + 90)
+        
+        # Calculate key points
+        # Nose of the rocket (front point)
+        nose = self.position + forward * self.radius
+        
+        # Base points (wider than before)
+        base_width = self.radius * 0.8  # Slightly narrower than before
+        base_right = self.position - forward * (self.radius * 0.8) + right * base_width
+        base_left = self.position - forward * (self.radius * 0.8) - right * base_width
+        
+        # Engine nozzle points (creates a small indent for the engine)
+        nozzle_width = base_width * 0.4  # Engine is 40% of base width
+        nozzle_back = self.radius * 0.9  # Slightly forward of the base
+        nozzle_right = self.position - forward * nozzle_back + right * nozzle_width
+        nozzle_left = self.position - forward * nozzle_back - right * nozzle_width
+        
+        # Return points in drawing order
+        return [
+            nose,           # Front point
+            base_right,     # Right wing
+            nozzle_right,   # Right engine point
+            nozzle_left,    # Left engine point
+            base_left,      # Left wing
+        ]
 
-    # function to draw the player stripe
+    # function to draw the player rocket
     def draw(self, screen):
         # Draw exhaust first so it appears behind the ship
         self.exhaust.draw(screen)
-        
-        line_width = 2
-        points = self.triangle()
-        # Fill the triangle with a slightly darker version of the player's color
-        if isinstance(self.color, str):
-            fill_color = self.color
-        else:
-            # Darken the RGB color by multiplying each component by 0.7
-            fill_color = tuple(int(c * 0.7) for c in self.color)
-        # Draw filled triangle
-        pygame.draw.polygon(screen, fill_color, points, 0)
-        # Draw outline
-        pygame.draw.polygon(screen, self.color, points, line_width)
 
-    # function to rotate the player stripe
+        # Get the points for the rocket shape
+        points = self.triangle()
+        
+        # Determine colors based on stun state
+        if self.is_stunned:
+            # Flash between normal color and a dimmer version during stun
+            if int(self.stun_timer * 10) % 2:
+                if isinstance(self.color, str):
+                    fill_color = self.color
+                    outline_color = self.color
+                else:
+                    fill_color = tuple(int(c * 0.3) for c in self.color)  # More dimmed when stunned
+                    outline_color = tuple(int(c * 0.5) for c in self.color)
+            else:
+                if isinstance(self.color, str):
+                    fill_color = self.color
+                    outline_color = self.color
+                else:
+                    # Normal colors when not in flash frame
+                    fill_color = tuple(int(c * 0.7) for c in self.color)
+                    outline_color = self.color
+        else:
+            # Normal colors when not stunned
+            if isinstance(self.color, str):
+                fill_color = self.color
+                outline_color = self.color
+            else:
+                fill_color = tuple(int(c * 0.7) for c in self.color)
+                outline_color = self.color
+        
+        # Draw filled rocket
+        pygame.draw.polygon(screen, fill_color, points, 0)
+        
+        # Draw outline
+        pygame.draw.polygon(screen, outline_color, points, 2)
+        
+        # Only draw detail line when not stunned
+        if not self.is_stunned:
+            # Add a small line detail near the nose for style
+            forward = pygame.Vector2(0, 1).rotate(self.rotation)
+            right = pygame.Vector2(0, 1).rotate(self.rotation + 90)
+            detail_back = self.radius * 0.3  # Position of detail line
+            detail_width = self.radius * 0.4  # Width of detail line
+            detail_start = self.position + forward * (self.radius - detail_back) - right * detail_width
+            detail_end = self.position + forward * (self.radius - detail_back) + right * detail_width
+            pygame.draw.line(screen, outline_color, detail_start, detail_end, 1)
+
+    # function to rotate the player rocket
     def rotate(self, dt, direction):
         # rotate based on direction (-1 for left, 1 for right)
         self.rotation += direction * PLAYER_TURN_SPEED * dt
@@ -92,18 +147,20 @@ class Player(CircleShape):
                                   self.rotation, False, 0)
                 return  # Skip normal controls while stunned
 
-        self.is_moving = False  # Reset movement flag
-        self.move_direction = 1  # Reset move direction
+        # Reset movement flags
+        self.is_moving = False
+        self.move_direction = 1
+        
+        # Get current keyboard state
         keys = pygame.key.get_pressed()
 
-        # Decrease the shoot timer by dt
-        if self.shoot_timer > 0:
-            self.shoot_timer -= dt
-
-        if keys[self.controls['left']]:  # turn left
-            self.rotate(dt, -1)  # Pass -1 for left
+        # Handle rotation (independent of movement)
+        if keys[self.controls['left']]:
+            self.rotate(dt, -1)
         if keys[self.controls['right']]:
-            self.rotate(dt, 1)  # Pass 1 for right
+            self.rotate(dt, 1)
+
+        # Handle movement
         if keys[self.controls['forward']]:
             self.is_moving = True
             self.move_direction = 1
@@ -111,8 +168,11 @@ class Player(CircleShape):
         if keys[self.controls['backward']]:
             self.is_moving = True
             self.move_direction = -1
-            self.move(dt, -1)  # Move backward
-        # Shoot if shoot key is pressed and cooldown has expired
+            self.move(dt, -1)
+
+        # Handle shooting
+        if self.shoot_timer > 0:
+            self.shoot_timer -= dt
         if keys[self.controls['shoot']] and self.shoot_timer <= 0:
             self.shoot()
             
