@@ -24,6 +24,11 @@ class Player(CircleShape):
         else:
             self.controls = controls
 
+        # Stun mechanics
+        self.stun_timer = 0
+        self.is_stunned = False
+        self.knockback_velocity = pygame.Vector2(0, 0)
+
         # Add this instance to the assigned groups
         if Player.containers:
             for group in Player.containers:
@@ -52,6 +57,18 @@ class Player(CircleShape):
 
     # update the player
     def update(self, dt):
+        # Update stun status
+        if self.is_stunned:
+            self.stun_timer -= dt
+            if self.stun_timer <= 0:
+                self.is_stunned = False
+                self.knockback_velocity = pygame.Vector2(0, 0)
+            else:
+                # Apply knockback and spin while stunned
+                self.position += self.knockback_velocity * dt
+                self.rotation += PLAYER_STUN_SPIN_SPEED * dt
+                return  # Skip normal controls while stunned
+
         keys = pygame.key.get_pressed()
 
         # Decrease the shoot timer by dt
@@ -88,3 +105,18 @@ class Player(CircleShape):
         if Shot.containers:
             for group in Shot.containers:
                 group.add(shot)
+
+    def stun(self, asteroid_position):
+        """Stun the player and knock them back from the asteroid"""
+        self.is_stunned = True
+        self.stun_timer = PLAYER_STUN_DURATION
+        
+        # Calculate knockback direction (away from asteroid)
+        knockback_direction = self.position - asteroid_position
+        if knockback_direction.length() > 0:  # Avoid division by zero
+            knockback_direction = knockback_direction.normalize()
+        else:
+            knockback_direction = pygame.Vector2(1, 0)  # Default direction if positions are the same
+            
+        # Set knockback velocity
+        self.knockback_velocity = knockback_direction * PLAYER_KNOCKBACK_SPEED

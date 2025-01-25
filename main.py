@@ -68,9 +68,12 @@ def main():
         
         # Check collisions between players and asteroids
         for asteroid in asteroids:
-            if player1.check_collision(asteroid) or player2.check_collision(asteroid):
-                print("Game over!")
-                sys.exit()  # Exit the program
+            # Check player 1 collision
+            if player1.check_collision(asteroid):
+                player1.stun(asteroid.position)
+            # Check player 2 collision
+            if player2.check_collision(asteroid):
+                player2.stun(asteroid.position)
         
         # Check collisions between bullets and asteroids
         for asteroid in asteroids:

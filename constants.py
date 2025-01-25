@@ -15,6 +15,11 @@ PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3
 SHOT_RADIUS = 5
 
+# Stun mechanics
+PLAYER_STUN_DURATION = 0.7  # seconds
+PLAYER_KNOCKBACK_SPEED = 400  # pixels per second
+PLAYER_STUN_SPIN_SPEED = 720  # degrees per second
+
 # Player 1 controls (WASD + SPACE)
 PLAYER1_LEFT = pygame.K_a
 PLAYER1_RIGHT = pygame.K_d
