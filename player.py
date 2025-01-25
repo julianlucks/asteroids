@@ -1,6 +1,7 @@
 from circleshape import CircleShape 
 from shot import Shot
 from constants import *
+from exhaust import ExhaustSystem
 import pygame
 
 class Player(CircleShape):
@@ -14,6 +15,11 @@ class Player(CircleShape):
         self.color = color  # Store player color
         self.score = 0  # Initialize score
         
+        # Exhaust system
+        self.exhaust = ExhaustSystem()
+        self.is_moving = False
+        self.move_direction = 1  # 1 for forward, -1 for backward
+
         # Set control scheme (default to player 1 controls)
         if controls is None:
             self.controls = {
@@ -47,6 +53,9 @@ class Player(CircleShape):
 
     # function to draw the player stripe
     def draw(self, screen):
+        # Draw exhaust first so it appears behind the ship
+        self.exhaust.draw(screen)
+        
         line_width = 2
         points = self.triangle()
         # Fill the triangle with a slightly darker version of the player's color
@@ -78,8 +87,13 @@ class Player(CircleShape):
                 self.position += self.knockback_velocity * dt
                 self.rotation += PLAYER_STUN_SPIN_SPEED * dt
                 self.wrap_position()  # Wrap position after movement
+                # Update exhaust but mark as not moving while stunned
+                self.exhaust.update(dt, self.position.x, self.position.y, 
+                                  self.rotation, False, 0)
                 return  # Skip normal controls while stunned
 
+        self.is_moving = False  # Reset movement flag
+        self.move_direction = 1  # Reset move direction
         keys = pygame.key.get_pressed()
 
         # Decrease the shoot timer by dt
@@ -91,12 +105,20 @@ class Player(CircleShape):
         if keys[self.controls['right']]:
             self.rotate(dt, 1)  # Pass 1 for right
         if keys[self.controls['forward']]:
+            self.is_moving = True
+            self.move_direction = 1
             self.move(dt)
         if keys[self.controls['backward']]:
+            self.is_moving = True
+            self.move_direction = -1
             self.move(dt, -1)  # Move backward
         # Shoot if shoot key is pressed and cooldown has expired
         if keys[self.controls['shoot']] and self.shoot_timer <= 0:
             self.shoot()
+            
+        # Update exhaust system
+        self.exhaust.update(dt, self.position.x, self.position.y, self.rotation, 
+                          self.is_moving, abs(self.move_direction))
 
     def move(self, dt, direction=1):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -118,20 +140,18 @@ class Player(CircleShape):
             for group in Shot.containers:
                 group.add(shot)
 
-    def stun(self, asteroid_position):
-        """Stun the player and knock them back from the asteroid"""
-        self.is_stunned = True
-        self.stun_timer = PLAYER_STUN_DURATION
-        
-        # Calculate knockback direction (away from asteroid)
-        knockback_direction = self.position - asteroid_position
-        if knockback_direction.length() > 0:  # Avoid division by zero
-            knockback_direction = knockback_direction.normalize()
-        else:
-            knockback_direction = pygame.Vector2(1, 0)  # Default direction if positions are the same
+    def stun(self, asteroid_pos):
+        if not self.is_stunned:
+            self.is_stunned = True
+            self.stun_timer = PLAYER_STUN_DURATION
             
-        # Set knockback velocity
-        self.knockback_velocity = knockback_direction * PLAYER_KNOCKBACK_SPEED
+            # Calculate knockback direction (away from asteroid)
+            knockback_dir = self.position - asteroid_pos
+            knockback_dir = knockback_dir.normalize()
+            self.knockback_velocity = knockback_dir * PLAYER_KNOCKBACK_SPEED
+            
+            # Trigger quick fade for exhaust particles
+            self.exhaust.trigger_quick_fade()
 
     def wrap_position(self):
         # Wrap position around the screen edges

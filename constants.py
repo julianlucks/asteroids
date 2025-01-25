@@ -24,6 +24,13 @@ EXPLOSION_PARTICLE_SPEED = 200
 EXPLOSION_PARTICLE_LIFETIME = 0.7  # seconds
 EXPLOSION_PARTICLE_SIZE = 3
 
+# Exhaust effects
+EXHAUST_PARTICLE_LIFETIME = 0.5  # seconds
+EXHAUST_PARTICLE_SPEED = 150
+EXHAUST_PARTICLE_SIZE = 3
+EXHAUST_SPAWN_RATE = 0.01  # seconds between particles
+EXHAUST_COLOR = (255, 165, 0)  # Brighter orange
+
 # Score display
 SCORE_FONT_SIZE = 32
 SCORE_PADDING = 20  # Padding from screen edges
