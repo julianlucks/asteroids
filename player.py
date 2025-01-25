@@ -6,11 +6,12 @@ import pygame
 class Player(CircleShape):
     containers = None  # This will be assigned dynamically in main.py
 
-    def __init__(self, x, y, controls=None):
+    def __init__(self, x, y, controls=None, color="white"):
         # Call the parent class's constructor
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0  # Timer to manage shooting cooldown
+        self.color = color  # Store player color
         
         # Set control scheme (default to player 1 controls)
         if controls is None:
@@ -45,10 +46,9 @@ class Player(CircleShape):
 
     # function to draw the player stripe
     def draw(self, screen):
-        line_color = "white"
         line_width = 2
         points = self.triangle()
-        pygame.draw.polygon(screen, line_color, points, line_width)
+        pygame.draw.polygon(screen, self.color, points, line_width)
 
     # function to rotate the player stripe
     def rotate(self, dt, direction):

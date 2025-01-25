@@ -29,7 +29,7 @@ def main():
     # Create player instances (automatically added to groups)
     player1_x = SCREEN_WIDTH / 3
     player1_y = SCREEN_HEIGHT / 2
-    player1 = Player(player1_x, player1_y)  # Player 1 with default controls (WASD + SPACE)
+    player1 = Player(player1_x, player1_y, color=(144, 238, 144))  # Light green
 
     player2_x = (SCREEN_WIDTH / 3) * 2
     player2_y = SCREEN_HEIGHT / 2
@@ -40,7 +40,8 @@ def main():
         'backward': PLAYER2_BACKWARD,
         'shoot': PLAYER2_SHOOT
     }
-    player2 = Player(player2_x, player2_y, player2_controls)  # Player 2 with arrow keys + numpad 0
+    player2 = Player(player2_x, player2_y, player2_controls, color=(207, 159, 255))  # Light blue
+
     # Create an asteroid field instance
     asteroid_field = AsteroidField()
 
