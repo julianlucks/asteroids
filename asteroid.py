@@ -31,6 +31,9 @@ class Asteroid(CircleShape):
 
     def draw(self, screen):
         points = self.get_points()
+        # Fill with dark gray
+        pygame.draw.polygon(screen, (40, 40, 40), points, 0)
+        # White outline
         pygame.draw.polygon(screen, (255, 255, 255), points, 2)
 
     def update(self, dt):

@@ -49,6 +49,15 @@ class Player(CircleShape):
     def draw(self, screen):
         line_width = 2
         points = self.triangle()
+        # Fill the triangle with a slightly darker version of the player's color
+        if isinstance(self.color, str):
+            fill_color = self.color
+        else:
+            # Darken the RGB color by multiplying each component by 0.7
+            fill_color = tuple(int(c * 0.7) for c in self.color)
+        # Draw filled triangle
+        pygame.draw.polygon(screen, fill_color, points, 0)
+        # Draw outline
         pygame.draw.polygon(screen, self.color, points, line_width)
 
     # function to rotate the player stripe
