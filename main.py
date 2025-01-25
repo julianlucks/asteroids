@@ -65,7 +65,7 @@ def main():
         for asteroid in asteroids:
             for shot in shots:
                 if shot.check_collision(asteroid):  # If bullet hits asteroid
-                    asteroid.kill()  # Remove the asteroid
+                    asteroid.split()  # Remove the asteroid
                     shot.kill()  # Remove the shot
 
         # Draw all objects in the drawable group
