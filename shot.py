@@ -4,6 +4,7 @@ import pygame
 
 class Shot(CircleShape):
     containers = None  # This will be assigned dynamically in main.py
+    game = None  # Will hold reference to game instance for sound access
     
     def __init__(self, x, y, velocity, owner=None):
         super().__init__(x, y, SHOT_RADIUS)

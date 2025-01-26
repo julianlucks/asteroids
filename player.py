@@ -8,6 +8,7 @@ import math
 
 class Player(CircleShape):
     containers = None
+    game = None  # Will hold reference to game instance for sound access
 
     def __init__(self, x, y, controls=None, color="white"):
         # Call the parent class's constructor
@@ -236,6 +237,12 @@ class Player(CircleShape):
                     for group in Shot.containers:
                         group.add(shot)
             
+            # Play super attack sound if available
+            if hasattr(Shot, 'game') and Shot.game:
+                sound = Shot.game.get_sound('super_attack')
+                if sound:
+                    sound.play()
+            
             # Create a visual effect for the super attack
             flash = Explosion(self.position.x, self.position.y, self.color)
         else:
@@ -280,18 +287,20 @@ class Player(CircleShape):
     def shoot(self):
         # Reset the shoot timer to the cooldown duration
         self.shoot_timer = PLAYER_SHOOT_COOLDOWN
-        # Create a shot object at the player's position
-        shot_velocity = pygame.Vector2(0, 1)  # Initial direction (upwards)
-        shot_velocity = shot_velocity.rotate(self.rotation)  # Rotate to player's direction
-        shot_velocity *= PLAYER_SHOOT_SPEED  # Scale to shoot speed
-
+        
+        # Calculate bullet velocity based on ship's rotation
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        shot_velocity = forward * PLAYER_SHOOT_SPEED
+        
+        # Create the shot
         shot = Shot(self.position.x, self.position.y, shot_velocity, owner=self)
-
-        # Add the shot to the appropriate groups
-        if Shot.containers:
-            for group in Shot.containers:
-                group.add(shot)
-
+        
+        # Play shooting sound if available
+        if hasattr(Shot, 'game') and Shot.game:
+            sound = Shot.game.get_sound('standard_attack')
+            if sound:
+                sound.play()
+                
     def stun(self, asteroid_pos):
         if not self.is_stunned:
             self.is_stunned = True
@@ -303,6 +312,12 @@ class Player(CircleShape):
                 knockback_dir.normalize_ip()
                 # Add current velocity to knockback
                 self.knockback_velocity = knockback_dir * MAX_SPEED + self.velocity * 0.5
+            
+            # Play stun sound if available
+            if hasattr(Player, 'game') and Player.game:
+                sound = Player.game.get_sound('stunned')
+                if sound:
+                    sound.play()
 
     def wrap_position(self):
         # Wrap position around the screen edges

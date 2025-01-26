@@ -7,6 +7,7 @@ import math
 
 class Asteroid(CircleShape):
     containers = None
+    game = None  # Will hold reference to game instance for sound access
 
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
@@ -160,6 +161,21 @@ class Asteroid(CircleShape):
             self.position.y = 0
 
     def split(self):
+        # Play explosion sound based on asteroid size
+        if hasattr(Asteroid, 'game') and Asteroid.game:
+            sound_name = None
+            if self.radius >= ASTEROID_MAX_RADIUS:
+                sound_name = 'big_explosion'
+            elif self.radius >= ASTEROID_MIN_RADIUS * 2:
+                sound_name = 'medium_explosion'
+            else:
+                sound_name = 'small_explosion'
+                
+            if sound_name:
+                sound = Asteroid.game.get_sound(sound_name)
+                if sound:
+                    sound.play()
+        
         # Create explosion effect
         Explosion(self.position.x, self.position.y, color=(255, 200, 100))
         

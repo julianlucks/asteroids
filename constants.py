@@ -86,3 +86,19 @@ PLAYER2_SUPER = pygame.K_KP1  # Numpad 1
 SUPER_ATTACK_COOLDOWN = 10.0  # Cooldown in seconds
 SUPER_ATTACK_BULLETS = 64     # number of bullets
 SUPER_ATTACK_SPEED = 350      # Slightly increased speed
+
+# Sound settings
+SOUND_ENABLED = True
+SOUND_VOLUME = 0.3  # Global volume multiplier
+ATTACK_SOUND_VOLUME = 0.4
+SUPER_ATTACK_SOUND_VOLUME = 0.5
+EXPLOSION_SOUND_VOLUME = 0.45
+STUN_SOUND_VOLUME = 0.4
+
+# Sound file paths
+SOUND_STANDARD_ATTACK = "sounds/standard_attack.wav"
+SOUND_SUPER_ATTACK = "sounds/super_attack.wav"
+SOUND_BIG_EXPLOSION = "sounds/big_asteroid_explodes.wav"
+SOUND_MEDIUM_EXPLOSION = "sounds/medium_asteroid_explodes.wav"
+SOUND_SMALL_EXPLOSION = "sounds/small_asteroid_explodes.wav"
+SOUND_STUNNED = "sounds/stunned.wav"
