@@ -1,11 +1,17 @@
 # 🚀 Asteroids Game
 
-Welcome to my retro-style 2-player Asteroids game!
+Welcome to my retro-style 2-player hotseat Asteroids game!
 
-## 🎮 How to Play
+## How to Play
 
 ### Starting the Game
-1. Make sure you have Python installed
+1. Make sure you have Python installed.
+   If not, [install it](https://www.python.org/downloads/).
+   Or, if you're using a Linux (Debian/Ubuntu) distribution, run:
+   ```bash
+   sudo apt update
+   sudo apt install python3
+   ```
 2. Run the game with:
    ```bash
    python3 main.py
