@@ -1,6 +1,8 @@
-# 🚀 Asteroids Game
+# Asteroids for Two
 
 Welcome to my retro-style 2-player hotseat Asteroids game!
+
+![Asteroids for Two Screenshot](pics/asteroids%20for%20two.png)
 
 ## How to Play
 
