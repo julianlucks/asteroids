@@ -94,6 +94,7 @@ ATTACK_SOUND_VOLUME = 0.4
 SUPER_ATTACK_SOUND_VOLUME = 0.5
 EXPLOSION_SOUND_VOLUME = 0.45
 STUN_SOUND_VOLUME = 0.4
+MUSIC_VOLUME = 0.25  # Lower volume for background music
 
 # Sound file paths
 SOUND_STANDARD_ATTACK = "sounds/standard_attack.wav"
@@ -102,3 +103,7 @@ SOUND_BIG_EXPLOSION = "sounds/big_asteroid_explodes.wav"
 SOUND_MEDIUM_EXPLOSION = "sounds/medium_asteroid_explodes.wav"
 SOUND_SMALL_EXPLOSION = "sounds/small_asteroid_explodes.wav"
 SOUND_STUNNED = "sounds/stunned.wav"
+
+# Music file paths
+MUSIC_THEME_1 = "sounds/background-theme-1.wav"
+MUSIC_THEME_2 = "sounds/background-theme-2.wav"

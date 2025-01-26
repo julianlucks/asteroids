@@ -22,6 +22,15 @@ class Game:
                 'small_explosion': self._load_sound(SOUND_SMALL_EXPLOSION, EXPLOSION_SOUND_VOLUME),
                 'stunned': self._load_sound(SOUND_STUNNED, STUN_SOUND_VOLUME)
             }
+            
+            # Initialize music system
+            self.current_theme = 1
+            pygame.mixer.music.set_volume(MUSIC_VOLUME)
+            pygame.mixer.music.load(MUSIC_THEME_1)
+            pygame.mixer.music.play(0)  # Play once, don't loop
+            
+            # Set up music end event handler
+            pygame.mixer.music.set_endevent(pygame.USEREVENT + 1)
         
         # Set up display
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -98,14 +107,27 @@ class Game:
             return self.sounds[name]
         return None
 
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            elif event.type == pygame.USEREVENT + 1:  # Music ended event
+                # Switch to the other theme
+                self.current_theme = 2 if self.current_theme == 1 else 1
+                next_theme = MUSIC_THEME_1 if self.current_theme == 1 else MUSIC_THEME_2
+                try:
+                    pygame.mixer.music.load(next_theme)
+                    pygame.mixer.music.play(0)  # Play once, don't loop
+                except pygame.error as e:
+                    print(f"Error loading music theme: {e}")
+        return True
+
     def run(self):
         running = True
         # Game Loop
         while running:
             # Event handling
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return
+            running = self.handle_events()
 
             # Draw background
             self.screen.blit(self.background_image, (0, 0))
