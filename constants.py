@@ -1,7 +1,12 @@
 import pygame
 
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+# Initialize pygame just for display info
+pygame.init()
+info = pygame.display.Info()
+# Get the screen resolution
+SCREEN_WIDTH = info.current_w
+SCREEN_HEIGHT = info.current_h
+pygame.quit()
 
 # Asset paths
 BACKGROUND_IMAGE_PATH = "pics/background_stars.jpg"

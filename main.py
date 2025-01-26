@@ -33,12 +33,12 @@ class Game:
             pygame.mixer.music.set_endevent(pygame.USEREVENT + 1)
         
         # Set up display
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
         pygame.display.set_caption("Asteroids!")
         self.clock = pygame.time.Clock()
 
         # Load and scale background image
-        self.background_image = pygame.image.load(BACKGROUND_IMAGE_PATH)
+        self.background_image = pygame.image.load(BACKGROUND_IMAGE_PATH).convert()
         self.background_image = pygame.transform.scale(self.background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
         # Set up font for score display
@@ -111,6 +111,9 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:  # ESC key to exit
+                    return False
             elif event.type == pygame.USEREVENT + 1:  # Music ended event
                 # Switch to the other theme
                 self.current_theme = 2 if self.current_theme == 1 else 1
