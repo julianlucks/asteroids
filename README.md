@@ -19,6 +19,8 @@ Welcome to my retro-style 2-player hotseat Asteroids game!
 
 ### Controls
 
+Quit with `Escape` (Esc).
+
 #### Player 1 (Green Ship)
 - `W` - Move forward
 - `S` - Move backward (brake when moving forward)
