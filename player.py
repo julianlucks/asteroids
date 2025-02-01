@@ -88,32 +88,30 @@ class Player(CircleShape):
         # Get the points for the rocket shape
         points = self.triangle()
         
+        # Convert string color names to RGB tuples if needed
+        if isinstance(self.color, str):
+            try:
+                base_color = pygame.Color(self.color)
+                base_color = (base_color.r, base_color.g, base_color.b)
+            except ValueError:
+                base_color = (255, 255, 255)  # Default to white if invalid color name
+        else:
+            base_color = self.color
+        
         # Determine colors based on stun state
         if self.is_stunned:
             # Flash between normal color and a dimmer version during stun
             if int(self.stun_timer * 10) % 2:
-                if isinstance(self.color, str):
-                    fill_color = self.color
-                    outline_color = self.color
-                else:
-                    fill_color = tuple(int(c * 0.3) for c in self.color)  # More dimmed when stunned
-                    outline_color = tuple(int(c * 0.5) for c in self.color)
+                fill_color = tuple(int(c * 0.3) for c in base_color)  # More dimmed when stunned
+                outline_color = tuple(int(c * 0.5) for c in base_color)
             else:
-                if isinstance(self.color, str):
-                    fill_color = self.color
-                    outline_color = self.color
-                else:
-                    # Normal colors when not in flash frame
-                    fill_color = tuple(int(c * 0.7) for c in self.color)
-                    outline_color = self.color
+                # Normal colors when not in flash frame
+                fill_color = tuple(int(c * 0.7) for c in base_color)
+                outline_color = base_color
         else:
             # Normal colors when not stunned
-            if isinstance(self.color, str):
-                fill_color = self.color
-                outline_color = self.color
-            else:
-                fill_color = tuple(int(c * 0.7) for c in self.color)
-                outline_color = self.color
+            fill_color = tuple(int(c * 0.7) for c in base_color)
+            outline_color = base_color
         
         # Draw filled rocket
         pygame.draw.polygon(screen, fill_color, points, 0)

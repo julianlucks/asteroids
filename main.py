@@ -33,7 +33,7 @@ class Game:
             pygame.mixer.music.set_endevent(pygame.USEREVENT + 1)
         
         # Set up display
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF, 32)
         pygame.display.set_caption("Asteroids!")
         self.clock = pygame.time.Clock()
 
