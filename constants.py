@@ -84,8 +84,8 @@ PLAYER2_LEFT = pygame.K_LEFT
 PLAYER2_RIGHT = pygame.K_RIGHT
 PLAYER2_FORWARD = pygame.K_UP
 PLAYER2_BACKWARD = pygame.K_DOWN
-PLAYER2_SHOOT = pygame.K_KP0  # Numpad 0
-PLAYER2_SUPER = pygame.K_KP1  # Numpad 1
+PLAYER2_SHOOT = pygame.K_RCTRL  # Right Control key
+PLAYER2_SUPER = pygame.K_RSHIFT  # Right Shift key
 
 # Super attack settings
 SUPER_ATTACK_COOLDOWN = 10.0  # Cooldown in seconds

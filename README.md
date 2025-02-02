@@ -40,8 +40,8 @@ Quit with `Escape` (Esc).
 - `↓` - Move backward (brake when moving forward)
 - `←` - Rotate left
 - `→` - Rotate right
-- `0` (NumPad) - Shoot
-- `1` (NumPad) - Super Attack (10s cooldown)
+- `Right Ctrl` - Shoot
+- `Right Shift` - Super Attack (10s cooldown)
 
 ## Game Tips
 - When hit by an asteroid, your ship will be briefly stunned
