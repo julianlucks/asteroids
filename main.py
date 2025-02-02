@@ -40,6 +40,10 @@ class Game:
         # Load and scale background image
         self.background_image = pygame.image.load(BACKGROUND_IMAGE_PATH).convert()
         self.background_image = pygame.transform.scale(self.background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        
+        # Create a persistent background surface
+        self.background_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.background_surface.blit(self.background_image, (0, 0))
 
         # Set up font for score display
         self.score_font = pygame.font.Font(None, SCORE_FONT_SIZE)
@@ -132,8 +136,8 @@ class Game:
             # Event handling
             running = self.handle_events()
 
-            # Draw background
-            self.screen.blit(self.background_image, (0, 0))
+            # Start with a fresh screen using our pre-rendered background
+            self.screen.blit(self.background_surface, (0, 0))
 
             # Update all objects in the updatable group
             for obj in self.updatable:
