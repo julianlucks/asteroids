@@ -14,7 +14,11 @@ Welcome to my retro-style 2-player hotseat Asteroids game!
    sudo apt update
    sudo apt install python3
    ```
-2. Run the game with:
+2. Install Pygame:
+   ```bash
+   sudo apt install python3-pygame
+   ```
+3. Run the game with:
    ```bash
    python3 main.py
    ```
